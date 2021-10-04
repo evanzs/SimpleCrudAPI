@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\evand\\source\\repos\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj": {}
+    "C:\\Users\\evand\\source\\repos\\Nova pasta\\SimpleCrudAPI\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj": {}
   },
   "projects": {
-    "C:\\Users\\evand\\source\\repos\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj": {
+    "C:\\Users\\evand\\source\\repos\\Nova pasta\\SimpleCrudAPI\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\evand\\source\\repos\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj",
+        "projectUniqueName": "C:\\Users\\evand\\source\\repos\\Nova pasta\\SimpleCrudAPI\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj",
         "projectName": "SimpleCRUD",
-        "projectPath": "C:\\Users\\evand\\source\\repos\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj",
+        "projectPath": "C:\\Users\\evand\\source\\repos\\Nova pasta\\SimpleCrudAPI\\SimpleCRUD\\SimpleCRUD\\SimpleCRUD.csproj",
         "packagesPath": "C:\\Users\\evand\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\evand\\source\\repos\\SimpleCRUD\\SimpleCRUD\\obj\\",
+        "outputPath": "C:\\Users\\evand\\source\\repos\\Nova pasta\\SimpleCrudAPI\\SimpleCRUD\\SimpleCRUD\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\evand\\AppData\\Roaming\\NuGet\\NuGet.Config",

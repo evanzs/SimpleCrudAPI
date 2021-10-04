@@ -15,6 +15,7 @@ using Amazon.S3.Transfer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Linq;
+using System.Net;
 
 namespace SimpleCRUD.Controllers
 {
@@ -134,53 +135,87 @@ namespace SimpleCRUD.Controllers
             }
         }
         [HttpPost("{Id}/uploadImage")]
-        public async Task<PutObjectResponse>UploadImage(int Id, IFormFile file)
+        public async Task<IActionResult>UploadImage(int Id, List<IFormFile> files)
         {
             Book book = _bookRepository.GetById(Id);
             var response = new PutObjectResponse();
-           
+            var imagesList = new List<Image>();
+
+            files = files.Where(file => file.ContentType.Contains("image/jpeg")).ToList();
+            
+            if(files.Count() == 0)
+            {
+                return StatusCode(400, "Só é permitido imagens no formato .jpg");
+            }
 
             if (book != null )
-            {
-
-                var image = new Image();
-
+            {           
 
                 var config = new AmazonS3Config()
                 {
                     RegionEndpoint = RegionEndpoint.USEast2,
                 };
 
-                using (var client = new AmazonS3Client(_config.Value.AcessKey,_config.Value.SecretKey, config))
+
+                try
                 {
-
-                    using (var stream = new System.IO.MemoryStream())
+                    using (var client = new AmazonS3Client(_config.Value.AcessKey, _config.Value.SecretKey, config))
                     {
+                        foreach (var file in files)
+                        {                         
 
-                        file.CopyTo(stream);
-                       
+                            var newFileName = $"{Guid.NewGuid()}_{file.FileName}";
+                            using (var stream = new System.IO.MemoryStream())
+                            {
+                                file.CopyTo(stream);
 
-                        PutObjectRequest request = new PutObjectRequest();
-                        request.InputStream = stream;
-                        request.BucketName = _config.Value.BucketName;
-                        request.CannedACL = S3CannedACL.PublicRead;
-                        request.Key = file.FileName;
-                        response = await client.PutObjectAsync(request);
+                                PutObjectRequest request = new PutObjectRequest();
+                                request.InputStream = stream;
+                                request.BucketName = _config.Value.BucketName;
+                                request.CannedACL = S3CannedACL.PublicRead;
+                                request.Key = newFileName;
+                                response = await client.PutObjectAsync(request);
 
-                    } ;                  
-                  
+                            };
+
+                            if (response?.HttpStatusCode == HttpStatusCode.OK)
+                            {
+                                imagesList.Add(new Image
+                                {
+                                    Url = $"http://teste-api-farmacias.s3.us-east-2.amazonaws.com/{newFileName}",
+                                    BookId = Id,
+                                    Name = newFileName
+
+                                });
+                            }
+
+                        }
+
+                    }
                 }
-
-
-
-               
-
-
-
-
-
+                catch (Exception ex)
+                {
+                    return StatusCode(500, "");
+                }      
             }
-            return response;
+
+            var resultList = new List<Image>();
+            try
+            {
+                foreach (var image in imagesList)
+                {
+                    var result = _imageRepository.Add(image);
+
+                    if (result != null)
+                        resultList.Add(result);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "");
+            }
+
+            return StatusCode(201,resultList);
         }
 
         [HttpDelete("{Id}")]

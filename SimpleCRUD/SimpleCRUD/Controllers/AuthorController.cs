@@ -42,11 +42,23 @@ namespace SimpleCRUD.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Post(Author author)
+        public IActionResult Post(AuthorDTO author)
         {
+
+            if(author == null)            
+                return StatusCode(400, "");
+            
+
+            var model = new Author()
+            {
+                BirthDate = author.BirthDate,
+                Country = author.Country,
+                Name = author.Name
+            };
+
             try
             {
-                var newAuthor = _authorRepository.Add(author);
+                var newAuthor = _authorRepository.Add(model);
                 
                 return StatusCode(201, newAuthor);
             }
